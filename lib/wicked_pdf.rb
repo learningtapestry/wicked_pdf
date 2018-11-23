@@ -26,10 +26,12 @@ class WickedPdf
   include Progress
 
   def initialize(wkhtmltopdf_binary_path = nil)
-    @exe_path = wkhtmltopdf_binary_path || find_wkhtmltopdf_binary_path
-    raise "Location of #{EXE_NAME} unknown" if @exe_path.empty?
-    raise "Bad #{EXE_NAME}'s path: #{@exe_path}" unless File.exist?(@exe_path)
-    raise "#{EXE_NAME} is not executable" unless File.executable?(@exe_path)
+    unless WickedPdf.config[:use_puppeteer]
+      @exe_path = wkhtmltopdf_binary_path || find_wkhtmltopdf_binary_path
+      raise "Location of #{EXE_NAME} unknown" if @exe_path.empty?
+      raise "Bad #{EXE_NAME}'s path: #{@exe_path}" unless File.exist?(@exe_path)
+      raise "#{EXE_NAME} is not executable" unless File.executable?(@exe_path)
+    end
 
     retrieve_binary_version
   end
@@ -56,10 +58,7 @@ class WickedPdf
     # merge in global config options
     options.merge!(WickedPdf.config) { |_key, option, _config| option }
     generated_pdf_file = WickedPdfTempfile.new('wicked_pdf_generated_file.pdf', options[:temp_path])
-    command = [@exe_path]
-    command += parse_options(options)
-    command << url
-    command << generated_pdf_file.path.to_s
+    command = create_command(url, generated_pdf_file, options)
 
     print_command(command.inspect) if in_development_mode?
 
@@ -87,6 +86,19 @@ class WickedPdf
   end
 
   private
+
+  def create_command(url, generated_pdf_file, options)
+    if WickedPdf.config[:use_puppeteer]
+      spec = Gem::Specification.find_by_name('wicked_pdf')
+      node_modules_path = "#{Rails.root}/node_modules"
+      command = ['node', File.join(spec.gem_dir, 'lib', 'wicked_pdf', 'pdf.js'), node_modules_path]
+    else
+      command = [@exe_path]
+    end
+    command += parse_options(options)
+    command << url
+    command << generated_pdf_file.path.to_s
+  end
 
   def in_development_mode?
     return Rails.env == 'development' if defined?(Rails.env)
