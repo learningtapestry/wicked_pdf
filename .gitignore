@@ -19,3 +19,4 @@ tmp
 test/dummy/**/*
 gemfiles/*.lock
 .DS_Store
+.rakeTasks

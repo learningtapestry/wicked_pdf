@@ -91,7 +91,12 @@ class WickedPdf
     if WickedPdf.config[:use_puppeteer]
       spec = Gem::Specification.find_by_name('wicked_pdf')
       node_modules_path = "#{Rails.root}/node_modules"
-      command = ['node', File.join(spec.gem_dir, 'lib', 'wicked_pdf', 'pdf.js'), node_modules_path]
+      command = [
+        'node',
+        File.join(spec.gem_dir, 'lib', 'wicked_pdf', 'pdf.js'),
+        node_modules_path,
+        "--puppeteer-timeout=#{options[:puppeteer_timeout]}"
+      ]
     else
       command = [@exe_path]
     end
