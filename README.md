@@ -332,6 +332,16 @@ render pdf: 'filename', header: { right: '[page] of [topage]' }
 
 You can put your default configuration, applied to all pdf's at "wicked_pdf.rb" initializer.
 
+To use [Puppeteer](https://github.com/GoogleChrome/puppeteer) instead of wkhtmltopdf specify `use_puppeteer` param and set it to `true`.
+With `puppeteer_timeout` one can set timeout (useful when generating PDFs from the URL)  
+
+```ruby
+WickedPdf.config = {
+  puppeteer_timeout: ENV.fetch('PUPPETEER_TIMEOUT', 30000),
+  use_puppeteer: true
+}
+```
+
 ### Rack Middleware
 
 If you would like to have WickedPdf automatically generate PDF views for all (or nearly all) pages by appending .pdf to the URL, add the following to your Rails app:
