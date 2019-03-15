@@ -69,10 +69,18 @@ class WickedPdf
         stderr.read
       end
     end
+
     if options[:return_file]
       return_file = options.delete(:return_file)
+
+      if options[:persist_as]
+        FileUtils.mv(generated_pdf_file.path,
+                     File.join(File.dirname(generated_pdf_file.path), options[:persist_as]))
+      end
+
       return generated_pdf_file
     end
+
     generated_pdf_file.rewind
     generated_pdf_file.binmode
     pdf = generated_pdf_file.read
