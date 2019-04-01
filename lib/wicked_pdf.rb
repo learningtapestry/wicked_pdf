@@ -81,8 +81,8 @@ class WickedPdf
       return_file = options.delete(:return_file)
 
       if options[:persist_as]
-        FileUtils.mv(generated_pdf_file.path,
-                     File.join(File.dirname(generated_pdf_file.path), options[:persist_as]))
+        path = generated_pdf_file.path
+        FileUtils.mv(path, File.join(File.dirname(path), options.delete(:persist_as)))
       end
 
       return generated_pdf_file
