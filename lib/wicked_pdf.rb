@@ -108,8 +108,7 @@ class WickedPdf
       command = [
         'node',
         File.join(spec.gem_dir, 'lib', 'wicked_pdf', 'pdf.js'),
-        node_modules_path,
-        "--puppeteer-timeout=#{options[:puppeteer_timeout]}"
+        node_modules_path
       ]
     else
       command = [@exe_path]
@@ -336,6 +335,7 @@ class WickedPdf
       r += make_options(options, [:redirect_delay,
                                   :zoom,
                                   :page_offset,
+                                  :puppeteer_timeout,
                                   :javascript_delay], '', :numeric)
       r += make_options(options, [:book,
                                   :default_header,
