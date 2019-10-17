@@ -221,6 +221,10 @@ class WickedPdf
     r = []
     [:header, :footer].collect do |hf|
       next if options[hf].blank?
+      unless options[hf].is_a? Hash
+        r += make_option(hf.to_s, options[hf], :string)
+        next
+      end
       opt_hf = options[hf]
       r += make_options(opt_hf, [:center, :font_name, :left, :right], hf.to_s)
       r += make_options(opt_hf, [:font_size, :spacing], hf.to_s, :numeric)
@@ -329,7 +333,8 @@ class WickedPdf
                                   :encoding,
                                   :user_style_sheet,
                                   :viewport_size,
-                                  :window_status])
+                                  :window_status,
+                                  :page_range])
       r += make_options(options, [:cookie,
                                   :post], '', :name_value)
       r += make_options(options, [:redirect_delay,
