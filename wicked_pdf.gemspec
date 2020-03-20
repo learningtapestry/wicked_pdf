@@ -33,6 +33,7 @@ DESC
   spec.add_dependency 'activesupport'
 
   spec.add_development_dependency 'rails'
+  spec.add_development_dependency 'bootsnap'
   spec.add_development_dependency 'bundler'
   spec.add_development_dependency 'rake'
   spec.add_development_dependency 'rubocop', '~> 0.68.0'

@@ -15,7 +15,7 @@ require 'wicked_pdf/tempfile'
 require 'wicked_pdf/middleware'
 require 'wicked_pdf/progress'
 
-class WickedPdf
+class WickedPdf # rubocop:disable Metrics/ClassLength:
   DEFAULT_BINARY_VERSION = Gem::Version.new('0.9.9')
   BINARY_VERSION_WITHOUT_DASHES = Gem::Version.new('0.12.0')
   EXE_NAME = 'wkhtmltopdf'.freeze
@@ -54,7 +54,7 @@ class WickedPdf
     string_file.close! if string_file
   end
 
-  def pdf_from_url(url, options = {})
+  def pdf_from_url(url, options = {}) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     # merge in global config options
     options.merge!(WickedPdf.config) { |_key, option, _config| option }
     generated_pdf_file = WickedPdfTempfile.new('wicked_pdf_generated_file.pdf', options[:temp_path])
@@ -321,7 +321,7 @@ class WickedPdf
     r
   end
 
-  def parse_others(options)
+  def parse_others(options) # rubocop:disable Metrics/MethodLength:
     r = []
     unless options.blank?
       r += make_options(options, [:proxy,
