@@ -65,7 +65,13 @@ class WickedPdf # rubocop:disable Metrics/ClassLength:
     if track_progress?(options)
       invoke_with_progress(command, options)
     else
-      err = Open3.popen3(*command) do |_stdin, _stdout, stderr|
+      env =
+        if WickedPdf.config.key?(:ld_preload_override)
+          { "LD_PRELOAD" => WickedPdf.config[:ld_preload_override] }
+        else
+          {}
+        end
+      err = Open3.popen3(env, *command) do |_stdin, _stdout, stderr|
         stderr.read
       end
     end

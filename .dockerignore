@@ -1,0 +1,10 @@
+# Ignore IDE specific files
+/.idea
+
+# simplecov reports
+coverage
+
+.pryrc
+.DS_Store
+.generators
+.rakeTasks

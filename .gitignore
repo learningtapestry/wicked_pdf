@@ -20,3 +20,4 @@ test/dummy/**/*
 gemfiles/*.lock
 .DS_Store
 .rakeTasks
+.idea
