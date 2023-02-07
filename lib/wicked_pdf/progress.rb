@@ -10,7 +10,7 @@ class WickedPdf
     def invoke_with_progress(command, options)
       output = []
       begin
-        PTY.spawn(command.join(' ')) do |stdout, _stdin, pid|
+        PTY.spawn(ENV, command.join(' ')) do |stdout, _stdin, pid|
           begin
             stdout.sync
             stdout.each_line("\r") do |line|
