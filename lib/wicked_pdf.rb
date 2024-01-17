@@ -337,7 +337,8 @@ class WickedPdf # rubocop:disable Metrics/ClassLength:
                                   :user_style_sheet,
                                   :viewport_size,
                                   :window_status,
-                                  :page_range])
+                                  :page_range,
+                                  :puppeteer_headless_mode])
       r += make_options(options, [:cookie,
                                   :post], '', :name_value)
       r += make_options(options, [:redirect_delay,
