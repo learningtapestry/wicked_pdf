@@ -41,17 +41,9 @@ class WickedPdf # rubocop:disable Metrics/ClassLength:
   end
 
   def pdf_from_string(string, options = {})
-    options = options.dup
-    options.merge!(WickedPdf.config) { |_key, option, _config| option }
-    string_file = WickedPdfTempfile.new('wicked_pdf.html', options[:temp_path])
-    string_file.binmode
-    string_file.write(string)
-    string_file.close
-
-    pdf = pdf_from_html_file(string_file.path, options)
-    pdf
-  ensure
-    string_file.close! if string_file
+    Retriable.retriable(tries: ENV.fetch('PDF_GENERATION_RETRIES', 1), base_interval: 1) do
+      pdf_from_string_without_retries(string, options)
+    end
   end
 
   def pdf_from_url(url, options = {}) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
@@ -175,6 +167,20 @@ class WickedPdf # rubocop:disable Metrics/ClassLength:
     else
       []
     end
+  end
+
+  def pdf_from_string_without_retries(string, options = {})
+    options = options.dup
+    options.merge!(WickedPdf.config) { |_key, option, _config| option }
+    string_file = WickedPdfTempfile.new('wicked_pdf.html', options[:temp_path])
+    string_file.binmode
+    string_file.write(string)
+    string_file.close
+
+    pdf = pdf_from_html_file(string_file.path, options)
+    pdf
+  ensure
+    string_file.close! if string_file
   end
 
   def make_option(name, value, type = :string)
