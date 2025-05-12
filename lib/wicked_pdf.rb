@@ -82,11 +82,11 @@ class WickedPdf # rubocop:disable Metrics/ClassLength:
     generated_pdf_file.rewind
     generated_pdf_file.binmode
     pdf = generated_pdf_file.read
-    raise "Error generating PDF\n Command Error: #{err}" if options[:raise_on_all_errors] && !err.empty?
-    raise "PDF could not be generated!\n Command Error: #{err}" if pdf && pdf.rstrip.empty?
+    raise "Error generating PDF\nCommand Error: #{err}" if options[:raise_on_all_errors] && !err.empty?
+    raise "PDF could not be generated!\nCommand Error: #{err}" if pdf && pdf.rstrip.empty?
     pdf
   rescue StandardError => e
-    raise "Failed to execute:\n#{command}\nError: #{e}"
+    raise "Failed to execute:\n#{command}\nError: #{e.message}"
   ensure
     generated_pdf_file.close! if generated_pdf_file && !return_file
   end
@@ -102,6 +102,9 @@ class WickedPdf # rubocop:disable Metrics/ClassLength:
         File.join(spec.gem_dir, 'lib', 'wicked_pdf', 'pdf.js'),
         node_modules_path
       ]
+      if options[:use_firefox] == "true"
+        command.prepend('sudo')
+      end
     else
       command = [@exe_path]
     end
@@ -344,7 +347,8 @@ class WickedPdf # rubocop:disable Metrics/ClassLength:
                                   :viewport_size,
                                   :window_status,
                                   :page_range,
-                                  :puppeteer_headless_mode])
+                                  :puppeteer_headless_mode,
+                                  :use_firefox])
       r += make_options(options, [:cookie,
                                   :post], '', :name_value)
       r += make_options(options, [:redirect_delay,
