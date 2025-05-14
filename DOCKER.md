@@ -2,10 +2,10 @@
 
 You can pull the image
 ```shell
-docker pull learningtapestry/wicked_pdf:ruby-2.7.7
+docker pull learningtapestry/wicked_pdf
 ```
 
 Or build it
 ```shell
-docker build -t learningtapestry/wicked_pdf:ruby-2.7.7 .
+docker buildx build --platform linux/arm64/v8,linux/amd64 -t learningtapestry/wicked_pdf --push .
 ```
