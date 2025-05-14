@@ -98,12 +98,12 @@ class WickedPdf # rubocop:disable Metrics/ClassLength:
       spec = Gem::Specification.find_by_name('wicked_pdf')
       node_modules_path = "#{Rails.root}/node_modules"
       command = [
-        'node',
+        `which node`.strip,
         File.join(spec.gem_dir, 'lib', 'wicked_pdf', 'pdf.js'),
         node_modules_path
       ]
       if options[:use_firefox] == "true"
-        command.prepend('sudo')
+        command.prepend('sudo', '-E', "PATH=#{ENV['PATH']}")
       end
     else
       command = [@exe_path]
