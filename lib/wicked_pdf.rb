@@ -103,7 +103,8 @@ class WickedPdf # rubocop:disable Metrics/ClassLength:
         node_modules_path
       ]
       if options[:use_firefox] == "true"
-        command.prepend('sudo', '-E', "PATH=#{ENV['PATH']}")
+        command.prepend('sudo')
+        command.insert(1, '-E', "PATH=#{ENV['PATH']}") if ENV.key?("PUPPETEER_FIREFOX_EXECUTABLE_PATH")
       end
     else
       command = [@exe_path]
